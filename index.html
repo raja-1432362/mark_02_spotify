@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify Premium Clone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fab fa-spotify"></i>
+                <span>Spotify</span>
+            </div>
+            <nav>
+                <ul>
+                    <li class="active"><i class="fas fa-home"></i> <span>Home</span></li>
+                    <li><i class="fas fa-search"></i> <span>Search</span></li>
+                    <li><i class="fas fa-book"></i> <span>Your Library</span></li>
+                </ul>
+            </nav>
+            <div class="playlists">
+                <h3>PLAYLISTS</h3>
+                <button id="create-playlist"><i class="fas fa-plus"></i> <span>Create Playlist</span></button>
+                <ul id="playlist-container">
+                    <li data-playlist="all">All Songs</li>
+                    <li data-playlist="favorites" class="active">My Favorites</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="particles-container" id="particles"></div>
+            <div class="spectrum-overlay" id="spectrum-overlay"></div>
+            <div class="gradient-backdrop" id="gradient-backdrop"></div>
+            
+            <header>
+                <div class="nav-buttons">
+                    <button class="nav-btn" id="back-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                    <button class="nav-btn" id="forward-btn" disabled><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="user-menu">
+                    <button class="user-btn">Premium</button>
+                    <button class="user-btn">Install App</button>
+                    <div class="user-profile">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content" id="main-content-view">
+                <div id="greeting-container">
+                    <h1 id="greeting">Good afternoon</h1>
+                    <p class="greeting-subtext" id="greeting-subtext">Keep the music playing all day long</p>
+                </div>
+                <div class="playlist-grid" id="playlist-grid"></div>
+                <h2>Made For You</h2>
+                <div class="song-grid" id="song-grid"></div>
+            </div>
+
+            <div class="library-view" id="library-view">
+                <div class="library-header">
+                    <h2>Your Library</h2>
+                    <p>Create your own playlist to get started</p>
+                    <button id="create-library-playlist" class="user-btn">Create Playlist</button>
+                </div>
+            </div>
+
+            <div class="playlist-view" id="playlist-view">
+                <div class="playlist-header">
+                    <img id="playlist-cover" src="" alt="Playlist Cover">
+                    <div class="playlist-info">
+                        <h2 id="playlist-name-display">Playlist</h2>
+                        <p id="playlist-description">Description</p>
+                        <button id="playlist-play-btn" class="user-btn"><i class="fas fa-play"></i> Play</button>
+                    </div>
+                </div>
+                <div class="playlist-songs">
+                    <ul class="song-list" id="playlist-song-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="player">
+            <div class="visualizer-container" id="visualizer-container"></div>
+            
+            <div class="song-info">
+                <div class="album-art-container">
+                    <div class="vinyl-record">
+                        <div class="vinyl"></div>
+                        <img id="album-art" src="" alt="Album Art">
+                    </div>
+                </div>
+                <div class="song-details">
+                    <h4 id="song-title">Not Playing</h4>
+                    <p id="song-artist">-</p>
+                </div>
+                <button class="like-btn"><i class="far fa-heart"></i></button>
+            </div>
+
+            <div class="player-controls">
+                <div class="control-buttons">
+                    <button id="shuffle" data-tooltip="Shuffle"><i class="fas fa-random"></i></button>
+                    <button id="prev" data-tooltip="Previous"><i class="fas fa-step-backward"></i></button>
+                    <button id="play" data-tooltip="Play"><i class="fas fa-play"></i></button>
+                    <button id="next" data-tooltip="Next"><i class="fas fa-step-forward"></i></button>
+                    <button id="repeat" data-tooltip="Repeat"><i class="fas fa-redo"></i></button>
+                </div>
+                <div class="progress-container">
+                    <span id="current-time">0:00</span>
+                    <div class="progress-bar">
+                        <div class="visualizer-progress" id="visualizer-progress"></div>
+                        <div class="progress" id="progress"></div>
+                    </div>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+
+            <div class="extra-controls">
+                <div class="player-extra-buttons">
+                    <button id="now-playing-btn" data-tooltip="Now Playing View"><i class="fas fa-music"></i></button>
+                    <button id="queue-btn" data-tooltip="Queue"><i class="fas fa-list-ul"></i></button>
+                    <button id="mic-btn" data-tooltip="Microphone"><i class="fas fa-microphone"></i></button>
+                    <button id="device-btn" data-tooltip="Connect to a device"><i class="fas fa-headphones"></i></button>
+                </div>
+                <div class="volume-control">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.7">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-panel" id="search-panel">
+            <input type="text" class="search-input" placeholder="Search artists, songs, or podcasts">
+            <button class="search-btn"><i class="fas fa-search"></i></button>
+        </div>
+
+        <audio id="audio"></audio>
+
+        <div class="modal" id="playlist-modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Create New Playlist</h2>
+                <input type="text" id="playlist-name" placeholder="Playlist name">
+                <button id="save-playlist">Create</button>
+            </div>
+        </div>
+
+        <div class="device-modal" id="device-modal">
+            <div class="device-modal-content">
+                <span class="close">&times;</span>
+                <h2><i class="fas fa-headphones"></i> Connect to a device</h2>
+                <div class="device-list">
+                    <div class="device-item active">
+                        <i class="fas fa-laptop"></i>
+                        <div>
+                            <div class="device-name">This Web Browser</div>
+                            <div class="device-type">Current device</div>
+                        </div>
+                    </div>
+                    <div class="device-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        <div>
+                            <div class="device-name">iPhone</div>
+                            <div class="device-type">Not connected</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="device-actions">
+                    <button class="device-action-btn"><i class="fas fa-sync-alt"></i> Refresh devices</button>
+                    <button class="device-action-btn"><i class="fas fa-info-circle"></i> Need help?</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="queue-modal" id="queue-modal">
+            <div class="queue-header">
+                <h2>Queue</h2>
+                <button class="queue-close"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="queue-tabs">
+                <div class="queue-tab active" data-tab="now-playing">Now Playing</div>
+                <div class="queue-tab" data-tab="recently-played">Recently Played</div>
+            </div>
+            <div class="queue-content">
+                <div class="queue-section active" id="now-playing-section">
+                    <h3>Now Playing</h3>
+                    <div class="queue-item">
+                        <img src="https://i.ytimg.com/vi/eve7x59aXJg/maxresdefault.jpg" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Shape of you</h4>
+                            <p>Ed sheeran</p>
+                        </div>
+                        <div class="queue-item-duration">3:20</div>
+                    </div>
+                    <h3>Next from: Your Top Mix</h3>
+                    <div class="queue-item">
+                        <img src="https://wallpapercave.com/wp/wp9396982.jpg" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Believer</h4>
+                            <p>Imagine Dragons</p>
+                        </div>
+                        <div class="queue-item-duration">2:54</div>
+                    </div>
+                    <div class="queue-item">
+                        <img src="https://i.cdn.newsbytesapp.com/images/l53120230825140034.jpeg" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Perfact</h4>
+                            <p>Ed sheeran</p>
+                        </div>
+                        <div class="queue-item-duration">3:35</div>
+                    </div>
+                </div>
+                <div class="queue-section" id="recently-played-section">
+                    <h3>Recently Played</h3>
+                    <div class="queue-item">
+                        <img src="https://www.nme.com/wp-content/uploads/2019/10/DUA_LIPA_DONT_START_2000.jpg" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Don't Start Now</h4>
+                            <p>Dua Lipa</p>
+                        </div>
+                        <div class="queue-item-duration">3:03</div>
+                    </div>
+                    <div class="queue-item">
+                        <img src="https://lyricstories.com/wp-content/uploads/2025/02/Someone-You-Loved-Lyrics-Meaning-Lewis-Capaldi-Song-Explained.webp" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Someone You Loved</h4>
+                            <p>Lewis Capaldi</p>
+                        </div>
+                        <div class="queue-item-duration">3:02</div>
+                    </div>
+                    <div class="queue-item">
+                        <img src="https://www.musicbusinessworldwide.com/files/2021/06/Weekend.jpeg" alt="Song Cover">
+                        <div class="queue-item-info">
+                            <h4>Blinding Lights</h4>
+                            <p>The Weeknd</p>
+                        </div>
+                        <div class="queue-item-duration">3:20</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="now-playing-view" id="now-playing-view">
+            <div class="now-playing-header">
+                <button class="now-playing-close"><i class="fas fa-chevron-down"></i></button>
+            </div>
+            <div class="now-playing-content">
+                <img src="" alt="Album Art" class="now-playing-album-art" id="now-playing-album-art">
+                <div class="now-playing-info">
+                    <h2 id="now-playing-title">Not Playing</h2>
+                    <p id="now-playing-artist">-</p>
+                </div>
+                <div class="now-playing-progress">
+                    <div class="now-playing-progress-container">
+                        <span class="now-playing-time" id="now-playing-current-time">0:00</span>
+                        <div class="now-playing-progress-bar">
+                            <div class="now-playing-progress-fill" id="now-playing-progress"></div>
+                        </div>
+                        <span class="now-playing-time" id="now-playing-duration">0:00</span>
+                    </div>
+                </div>
+                <div class="now-playing-controls">
+                    <button id="now-playing-shuffle" data-tooltip="Shuffle"><i class="fas fa-random"></i></button>
+                    <button id="now-playing-prev" data-tooltip="Previous"><i class="fas fa-step-backward"></i></button>
+                    <button id="now-playing-play" class="now-playing-play" data-tooltip="Play"><i class="fas fa-play"></i></button>
+                    <button id="now-playing-next" data-tooltip="Next"><i class="fas fa-step-forward"></i></button>
+                    <button id="now-playing-repeat" data-tooltip="Repeat"><i class="fas fa-redo"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
